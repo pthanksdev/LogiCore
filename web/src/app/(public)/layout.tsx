@@ -8,16 +8,14 @@ import {
     ArrowRight,
     Menu,
     X,
-    Shield,
-    Activity,
-    Layers,
-    CreditCard,
     Search,
     Package,
     Truck,
     Globe,
     Briefcase,
     ShieldCheck,
+    Layers,
+    CreditCard,
 } from 'lucide-react'
 
 export default function PublicLayout({
@@ -58,7 +56,7 @@ export default function PublicLayout({
 
     return (
         <div className="relative min-h-screen bg-zinc-950 font-sans text-zinc-100 selection:bg-blue-500 selection:text-white flex flex-col justify-between overflow-x-hidden">
-            {/* Fixed High-Tech Parallax Background Layer */}
+            {/* Fixed Parallax Background */}
             <div className="fixed inset-0 pointer-events-none -z-20 overflow-hidden">
                 <div
                     className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed opacity-30 filter saturate-150 contrast-125 transition-opacity duration-1000"
@@ -92,7 +90,7 @@ export default function PublicLayout({
                         </span>
                     </Link>
 
-                    {/* Desktop Links */}
+                    {/* Desktop Navigation Links */}
                     <nav className="hidden md:flex items-center gap-1.5 bg-zinc-900/60 p-1.5 rounded-full border border-zinc-800/80 backdrop-blur-md">
                         {navLinks.map((link) => {
                             const isActive = pathname === link.href
@@ -112,13 +110,14 @@ export default function PublicLayout({
                         })}
                     </nav>
 
-                    {/* Auth CTA Buttons & Cmd+K Trigger */}
+                    {/* Desktop Actions (Search + Auth) */}
                     <div className="hidden md:flex items-center gap-3">
                         <button
                             onClick={() => setCmdKOpen(true)}
-                            className="px-3 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white text-xs font-mono flex items-center gap-2 transition-all hover:border-zinc-700"
+                            className="px-3.5 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white text-xs font-mono flex items-center gap-2.5 transition-all hover:border-blue-500/50 hover:bg-zinc-800/80"
                         >
-                            <span className="text-zinc-500">Search...</span>
+                            <Search className="w-3.5 h-3.5 text-blue-400" />
+                            <span>Quick Search...</span>
                             <kbd className="px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300 text-[10px]">⌘K</kbd>
                         </button>
                         <Link
@@ -138,17 +137,26 @@ export default function PublicLayout({
                         </Link>
                     </div>
 
-                    {/* Mobile Menu Toggle Button */}
-                    <button
-                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        className="md:hidden p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white focus:outline-none"
-                        aria-label="Toggle Navigation Menu"
-                    >
-                        {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-                    </button>
+                    {/* Mobile Buttons (Search + Hamburger Toggle) */}
+                    <div className="flex items-center gap-2 md:hidden">
+                        <button
+                            onClick={() => setCmdKOpen(true)}
+                            className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white focus:outline-none flex items-center justify-center"
+                            aria-label="Search Portal"
+                        >
+                            <Search className="w-5 h-5 text-blue-400" />
+                        </button>
+                        <button
+                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                            className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white focus:outline-none"
+                            aria-label="Toggle Navigation Menu"
+                        >
+                            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                        </button>
+                    </div>
                 </div>
 
-                {/* Mobile Drawer Overlay */}
+                {/* Mobile Drawer */}
                 {mobileMenuOpen && (
                     <div className="md:hidden bg-zinc-950/95 backdrop-blur-2xl border-b border-zinc-800 px-6 py-6 transition-all animate-in fade-in slide-in-from-top-4 duration-200">
                         <div className="flex flex-col gap-3">
@@ -204,7 +212,7 @@ export default function PublicLayout({
                                 <span className="font-bold text-xl text-white">Logi<span className="text-blue-500">Core</span></span>
                             </Link>
                             <p className="text-zinc-400 text-sm max-w-sm leading-relaxed">
-                                The next-generation modular supply chain engine. Provision inventory control, real-time logistics tracking, and enterprise procurement on a multi-tenant PostgreSQL RLS core.
+                                The next-generation modular supply chain engine. Provision inventory control, real-time logistics tracking, and enterprise procurement on a multi-tenant PostgreSQL core.
                             </p>
 
                             {/* System Status Pill */}
@@ -279,20 +287,22 @@ function CommandPaletteModal({ onClose }: { onClose: () => void }) {
     )
 
     return (
-        <div className="fixed inset-0 z-50 bg-zinc-950/80 backdrop-blur-md flex items-start justify-center pt-24 px-4 animate-in fade-in duration-150">
+        <div className="fixed inset-0 z-50 bg-zinc-950/80 backdrop-blur-md flex items-start justify-center pt-16 sm:pt-24 px-4 animate-in fade-in duration-150">
             <div className="fixed inset-0" onClick={onClose} />
             <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-3xl shadow-2xl overflow-hidden z-10">
                 <div className="p-4 border-b border-zinc-800 flex items-center gap-3">
-                    <Search className="w-4 h-4 text-zinc-400" />
+                    <Search className="w-4 h-4 text-blue-400 shrink-0" />
                     <input
                         type="text"
                         autoFocus
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Type a command or search page..."
+                        placeholder="Search page or command..."
                         className="w-full bg-transparent text-white text-sm focus:outline-none placeholder:text-zinc-500 font-medium"
                     />
-                    <kbd className="px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 text-xs font-mono">ESC</kbd>
+                    <button onClick={onClose} className="p-1 rounded-lg hover:bg-zinc-800 text-zinc-400">
+                        <X className="w-4 h-4" />
+                    </button>
                 </div>
 
                 <div className="max-h-80 overflow-y-auto p-2 space-y-1">
@@ -329,7 +339,7 @@ function CommandPaletteModal({ onClose }: { onClose: () => void }) {
 
                 <div className="p-3 bg-zinc-950/80 border-t border-zinc-800 text-[11px] text-zinc-500 flex items-center justify-between font-mono">
                     <span>Navigation Shortcut</span>
-                    <span>Press ESC to exit</span>
+                    <span>Tap item or ESC to exit</span>
                 </div>
             </div>
         </div>

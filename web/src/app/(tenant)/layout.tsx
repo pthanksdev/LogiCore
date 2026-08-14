@@ -1,65 +1,136 @@
-import Link from 'next/link'
+'use client'
 
-export default async function TenantLayout({
+import React, { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Menu, X, LayoutDashboard, Package, ShoppingCart, Bell, Settings, Truck, CreditCard, Users, Key, LogOut } from 'lucide-react'
+
+export default function TenantLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    const [mobileOpen, setMobileOpen] = useState(false)
+    const pathname = usePathname()
+
+    const mainNav = [
+        { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+        { label: 'Module Catalog', href: '/catalog', icon: Package },
+        { label: 'Orders & Tracking', href: '/orders', icon: ShoppingCart },
+        { label: 'Notifications', href: '/notifications', icon: Bell },
+        { label: 'Profile Settings', href: '/settings', icon: Settings },
+    ]
+
+    const serviceNav = [
+        { label: 'Cargo Shipments', href: '/dashboard/shipments', icon: Truck },
+        { label: 'Invoices & Billing', href: '/dashboard/billing', icon: CreditCard },
+        { label: 'Team Directory', href: '/dashboard/team', icon: Users },
+        { label: 'API & Webhooks', href: '/dashboard/integrations', icon: Key },
+    ]
+
+    const renderNav = (closeMobile = false) => (
+        <nav className="space-y-1 px-3">
+            <div className="px-3 mb-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Main Operations</div>
+            {mainNav.map((item) => {
+                const IconComp = item.icon
+                const isActive = pathname === item.href
+                return (
+                    <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => closeMobile && setMobileOpen(false)}
+                        className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-colors ${
+                            isActive
+                                ? 'bg-blue-600/15 text-blue-400 border border-blue-500/30'
+                                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'
+                        }`}
+                    >
+                        <IconComp className="w-4 h-4 shrink-0" />
+                        {item.label}
+                    </Link>
+                )
+            })}
+
+            <div className="px-3 pt-6 mb-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Services & Tools</div>
+            {serviceNav.map((item) => {
+                const IconComp = item.icon
+                const isActive = pathname === item.href
+                return (
+                    <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => closeMobile && setMobileOpen(false)}
+                        className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-colors ${
+                            isActive
+                                ? 'bg-blue-600/15 text-blue-400 border border-blue-500/30'
+                                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'
+                        }`}
+                    >
+                        <IconComp className="w-4 h-4 shrink-0" />
+                        {item.label}
+                    </Link>
+                )
+            })}
+        </nav>
+    )
+
     return (
-        <div className="flex h-screen bg-zinc-950 font-sans text-white overflow-hidden">
-            {/* Sidebar */}
-            <aside className="w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col shrink-0">
+        <div className="flex flex-col md:flex-row h-screen bg-zinc-950 font-sans text-white overflow-hidden">
+            {/* Mobile Header Bar */}
+            <div className="md:hidden bg-zinc-900 border-b border-zinc-800 px-4 py-3 flex items-center justify-between z-40 shrink-0">
+                <div className="font-bold text-lg tracking-tight">SCM<span className="text-blue-500">Platform</span></div>
+                <button
+                    onClick={() => setMobileOpen(!mobileOpen)}
+                    className="p-2 rounded-xl bg-zinc-800 text-zinc-300 hover:text-white"
+                >
+                    {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
+            </div>
+
+            {/* Mobile Slide-Over Drawer */}
+            {mobileOpen && (
+                <div className="md:hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex flex-col">
+                    <div className="p-4 border-b border-zinc-800 flex items-center justify-between bg-zinc-900">
+                        <div className="font-bold text-lg tracking-tight">SCM<span className="text-blue-500">Platform</span></div>
+                        <button onClick={() => setMobileOpen(false)} className="p-2 rounded-xl bg-zinc-800 text-zinc-400">
+                            <X className="w-6 h-6" />
+                        </button>
+                    </div>
+                    <div className="flex-1 overflow-y-auto py-4 bg-zinc-950">
+                        {renderNav(true)}
+                    </div>
+                    <div className="p-4 border-t border-zinc-800 bg-zinc-900">
+                        <form action="/auth/signout" method="post">
+                            <button className="w-full py-3 text-sm font-semibold text-zinc-400 hover:text-white bg-zinc-800 rounded-xl transition-colors flex items-center justify-center gap-2">
+                                <LogOut className="w-4 h-4" /> Sign out
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Desktop Sidebar */}
+            <aside className="hidden md:flex w-64 bg-zinc-900 border-r border-zinc-800 flex-col shrink-0">
                 <div className="p-6 border-b border-zinc-800">
                     <div className="font-bold text-xl tracking-tight mb-1">SCM<span className="text-blue-500">Platform</span></div>
                     <div className="text-xs text-zinc-500 font-mono">Tenant Portal</div>
                 </div>
 
                 <div className="flex-1 overflow-y-auto py-4">
-                    <nav className="space-y-1 px-3">
-                        <div className="px-3 mb-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Main Operations</div>
-                        <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
-                            Dashboard
-                        </Link>
-                        <Link href="/catalog" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
-                            Module Catalog
-                        </Link>
-                        <Link href="/orders" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
-                            Orders & Tracking
-                        </Link>
-                        <Link href="/notifications" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
-                            Notifications
-                        </Link>
-                        <Link href="/settings" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
-                            Profile Settings
-                        </Link>
-
-                        <div className="px-3 pt-4 mb-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Services & Tools</div>
-                        <Link href="/dashboard/shipments" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
-                            🚚 Cargo Shipments
-                        </Link>
-                        <Link href="/dashboard/billing" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
-                            💳 Invoices & Billing
-                        </Link>
-                        <Link href="/dashboard/team" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
-                            👥 Team Directory
-                        </Link>
-                        <Link href="/dashboard/integrations" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
-                            🔌 API & Webhooks
-                        </Link>
-                    </nav>
+                    {renderNav(false)}
                 </div>
 
                 <div className="p-4 border-t border-zinc-800">
                     <form action="/auth/signout" method="post">
-                        <button className="w-full px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 rounded-lg transition-colors">
-                            Sign out
+                        <button className="w-full px-4 py-2.5 text-sm font-medium text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 rounded-xl transition-colors flex items-center justify-center gap-2">
+                            <LogOut className="w-4 h-4" /> Sign out
                         </button>
                     </form>
                 </div>
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 overflow-y-auto">
+            <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
                 {children}
             </main>
         </div>
