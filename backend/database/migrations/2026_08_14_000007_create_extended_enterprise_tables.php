@@ -6,8 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    public $withinTransaction = false;
+
     public function up(): void
     {
+        Schema::dropIfExists('webhooks');
+        Schema::dropIfExists('api_keys');
+        Schema::dropIfExists('support_tickets');
+        Schema::dropIfExists('shipments');
+        Schema::dropIfExists('inventories');
+        Schema::dropIfExists('audit_logs');
+
         Schema::create('audit_logs', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('user');

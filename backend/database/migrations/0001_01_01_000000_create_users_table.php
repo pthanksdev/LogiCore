@@ -3,20 +3,22 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
+    /**
+     * Disable transaction wrapper for PostgreSQL DDL compatibility.
+     */
+    public $withinTransaction = false;
+
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        // Safely drop any leftover tables and sequences with CASCADE for PostgreSQL
-        DB::statement('DROP TABLE IF EXISTS users CASCADE;');
-        DB::statement('DROP SEQUENCE IF EXISTS users_id_seq CASCADE;');
-        DB::statement('DROP TABLE IF EXISTS password_reset_tokens CASCADE;');
-        DB::statement('DROP TABLE IF EXISTS sessions CASCADE;');
+        Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
 
         Schema::create('users', function (Blueprint $table) {
             $table->id();
@@ -55,8 +57,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };

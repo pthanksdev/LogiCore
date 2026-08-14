@@ -6,8 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    public $withinTransaction = false;
+
     public function up(): void
     {
+        Schema::dropIfExists('invoices');
+        Schema::dropIfExists('billing_customers');
+        Schema::dropIfExists('departments');
+        Schema::dropIfExists('tenant_users');
+
         Schema::create('tenant_users', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('cust_id', 10);

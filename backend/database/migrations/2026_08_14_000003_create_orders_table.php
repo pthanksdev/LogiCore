@@ -6,8 +6,12 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    public $withinTransaction = false;
+
     public function up(): void
     {
+        Schema::dropIfExists('orders');
+
         Schema::create('orders', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('cust_id', 10);
