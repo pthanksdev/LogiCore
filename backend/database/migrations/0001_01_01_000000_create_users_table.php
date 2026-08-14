@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -11,6 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Safely drop any leftover tables and sequences with CASCADE for PostgreSQL
+        DB::statement('DROP TABLE IF EXISTS users CASCADE;');
+        DB::statement('DROP SEQUENCE IF EXISTS users_id_seq CASCADE;');
+        DB::statement('DROP TABLE IF EXISTS password_reset_tokens CASCADE;');
+        DB::statement('DROP TABLE IF EXISTS sessions CASCADE;');
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
