@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('cust_id', 10);
             $table->foreign('cust_id')->references('cust_id')->on('customers')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->enum('role', ['owner', 'admin', 'billing', 'member'])->default('member');
+            $table->string('role')->default('member');
             $table->timestamps();
 
             $table->unique(['cust_id', 'user_id']);
@@ -42,7 +42,7 @@ return new class extends Migration
             $table->foreign('cust_id')->references('cust_id')->on('customers')->onDelete('cascade');
             $table->string('stripe_invoice_id')->unique()->nullable();
             $table->decimal('amount', 10, 2);
-            $table->enum('status', ['open', 'paid', 'void'])->default('open');
+            $table->string('status')->default('open');
             $table->timestamp('due_date')->nullable();
             $table->timestamp('paid_at')->nullable();
             $table->text('pdf_url')->nullable();

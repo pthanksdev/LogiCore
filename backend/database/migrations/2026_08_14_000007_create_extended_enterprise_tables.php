@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('action');
             $table->text('details');
             $table->string('ip')->nullable();
-            $table->enum('severity', ['INFO', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL'])->default('INFO');
+            $table->string('severity')->default('INFO');
             $table->timestamps();
         });
 
@@ -47,8 +47,8 @@ return new class extends Migration
             $table->string('ticket_code')->unique();
             $table->string('customer');
             $table->string('subject');
-            $table->enum('priority', ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'])->default('MEDIUM');
-            $table->enum('status', ['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'])->default('OPEN');
+            $table->string('priority')->default('MEDIUM');
+            $table->string('status')->default('OPEN');
             $table->string('sla_expires')->default('2h 00m');
             $table->timestamps();
         });

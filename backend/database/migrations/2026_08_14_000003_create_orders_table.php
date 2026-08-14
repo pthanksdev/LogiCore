@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreign('cust_id')->references('cust_id')->on('customers')->onDelete('cascade');
             $table->uuid('module_id');
             $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade');
-            $table->enum('status', ['pending', 'approved', 'pending_decline', 'rejected'])->default('pending');
+            $table->string('status')->default('pending');
             $table->text('decline_reason')->nullable();
             $table->timestamps();
         });
