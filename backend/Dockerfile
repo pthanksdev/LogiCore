@@ -23,8 +23,10 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Set default fallback APP_KEY for Sanctum encryption security if missing
+# Set default fallback production variables for Sanctum & Rate Limiter
 ENV APP_KEY=base64:4VnZ5Vb5d0yZ7m9K2w8X3y1Z4a6b8c0d2e4f6g8h0i2=
+ENV CACHE_STORE=array
+ENV SESSION_DRIVER=array
 
 # Set storage permissions
 RUN chmod -R 777 storage bootstrap/cache
@@ -32,5 +34,5 @@ RUN chmod -R 777 storage bootstrap/cache
 # Expose port (Render automatically sets $PORT)
 EXPOSE 10000
 
-# Start Laravel production server with optimized migration & seeding check
+# Start Laravel production server with clean migration & seeding check
 CMD php artisan config:cache && php artisan route:cache && php artisan migrate --force && (php artisan db:seed --force || true) && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
