@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: logicore-backend
+    env: docker
+    dockerfilePath: Dockerfile
+    rootDir: backend
+    region: ohio
+    plan: free
+    envVars:
+      - key: APP_NAME
+        value: LogiCore
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: LOG_CHANNEL
+        value: stderr

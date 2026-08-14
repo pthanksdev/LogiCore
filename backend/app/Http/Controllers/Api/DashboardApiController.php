@@ -176,7 +176,7 @@ class DashboardApiController extends Controller
      */
     public function getCustomerBilling(Request $request)
     {
-        $customer = Customer::where('auth_id', $request->user()->id)->first();
+        $customer = Customer::where('user_id', $request->user()->id)->first();
         if (!$customer) {
             return response()->json(['status' => 'success', 'data' => []]);
         }
@@ -190,7 +190,7 @@ class DashboardApiController extends Controller
      */
     public function getCustomerShipments(Request $request)
     {
-        $customer = Customer::where('auth_id', $request->user()->id)->first();
+        $customer = Customer::where('user_id', $request->user()->id)->first();
         if ($customer) {
             $shipments = Shipment::where('cust_id', $customer->cust_id)->orderBy('created_at', 'desc')->get();
             if ($shipments->count() > 0) {
@@ -226,7 +226,7 @@ class DashboardApiController extends Controller
      */
     public function getCustomerIntegrations(Request $request)
     {
-        $customer = Customer::where('auth_id', $request->user()->id)->first();
+        $customer = Customer::where('user_id', $request->user()->id)->first();
         $custId = $customer ? $customer->cust_id : '1000000001';
 
         $apiKeys = ApiKey::where('cust_id', $custId)->get();

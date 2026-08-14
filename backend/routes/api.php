@@ -35,6 +35,7 @@ Route::prefix('v1')->group(function () {
         
         // Auth session endpoints
         Route::get('/auth/me', [AuthController::class, 'me']);
+        Route::put('/auth/me', [AuthController::class, 'updateProfile']);
         Route::post('/auth/logout', [AuthController::class, 'logout']);
 
         // Notifications

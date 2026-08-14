@@ -104,14 +104,43 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'user' => [
+            'data' => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->role,
                 'cust_id' => $user->cust_id,
+                'phone' => $user->phone,
+                'address' => $user->address,
+                'company' => $user->company,
+                'gst_number' => $user->gst_number,
                 'customer' => $user->customer,
             ],
+        ]);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'phone' => 'nullable|string',
+            'address' => 'nullable|string',
+            'company' => 'nullable|string',
+            'gst_number' => 'nullable|string',
+        ]);
+
+        $user->update($validated);
+        
+        if ($user->customer) {
+            $user->customer->update($validated);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Profile updated successfully',
+            'data' => $user,
         ]);
     }
 
