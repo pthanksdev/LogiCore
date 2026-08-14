@@ -23,10 +23,12 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Set default fallback production variables for Sanctum & Rate Limiter
+# Set default production environment variables
 ENV APP_KEY=base64:4VnZ5Vb5d0yZ7m9K2w8X3y1Z4a6b8c0d2e4f6g8h0i2=
+ENV DB_CONNECTION=pgsql
 ENV CACHE_STORE=array
 ENV SESSION_DRIVER=array
+ENV APP_DEBUG=true
 
 # Set storage permissions
 RUN chmod -R 777 storage bootstrap/cache
