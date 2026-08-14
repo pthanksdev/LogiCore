@@ -4,6 +4,12 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search, Command, LayoutDashboard, Truck, Warehouse, DollarSign, Users, Key, LifeBuoy, ShieldCheck, Lock, Activity, X } from 'lucide-react'
 
+export function openCommandPalette() {
+    if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('open-command-palette'))
+    }
+}
+
 export function CommandPalette() {
     const [isOpen, setIsOpen] = useState(false)
     const [query, setQuery] = useState('')
@@ -19,8 +25,14 @@ export function CommandPalette() {
                 setIsOpen(false)
             }
         }
+        const handleCustomOpen = () => setIsOpen(true)
+
         window.addEventListener('keydown', handleKeyDown)
-        return () => window.removeEventListener('keydown', handleKeyDown)
+        window.addEventListener('open-command-palette', handleCustomOpen)
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+            window.removeEventListener('open-command-palette', handleCustomOpen)
+        }
     }, [])
 
     const links = [
@@ -57,11 +69,12 @@ export function CommandPalette() {
     if (!isOpen) return null
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-start justify-center pt-20 px-4 animate-in fade-in duration-200">
-            <div className="bg-zinc-900 border border-zinc-800 w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-start justify-center pt-16 sm:pt-20 px-4 animate-in fade-in duration-200">
+            <div className="fixed inset-0" onClick={() => setIsOpen(false)} />
+            <div className="relative bg-zinc-900 border border-zinc-800 w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh] z-10">
                 {/* Search Bar Header */}
                 <div className="p-4 border-b border-zinc-800 flex items-center gap-3">
-                    <Search className="w-5 h-5 text-zinc-400 shrink-0" />
+                    <Search className="w-5 h-5 text-blue-400 shrink-0" />
                     <input
                         type="text"
                         autoFocus
