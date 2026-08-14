@@ -3,19 +3,13 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { openCommandPalette } from '@/components/CommandPalette'
 import {
     Zap,
     ArrowRight,
     Menu,
     X,
     Search,
-    Package,
-    Truck,
-    Globe,
-    Briefcase,
-    ShieldCheck,
-    Layers,
-    CreditCard,
 } from 'lucide-react'
 
 export default function PublicLayout({
@@ -26,24 +20,13 @@ export default function PublicLayout({
     const pathname = usePathname()
     const [scrolled, setScrolled] = useState(false)
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const [cmdKOpen, setCmdKOpen] = useState(false)
 
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 20)
         }
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-                e.preventDefault()
-                setCmdKOpen((prev) => !prev)
-            }
-        }
         window.addEventListener('scroll', handleScroll, { passive: true })
-        window.addEventListener('keydown', handleKeyDown)
-        return () => {
-            window.removeEventListener('scroll', handleScroll)
-            window.removeEventListener('keydown', handleKeyDown)
-        }
+        return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
     const navLinks = [
@@ -113,7 +96,7 @@ export default function PublicLayout({
                     {/* Desktop Actions (Search + Auth) */}
                     <div className="hidden md:flex items-center gap-3">
                         <button
-                            onClick={() => setCmdKOpen(true)}
+                            onClick={() => openCommandPalette()}
                             className="px-3.5 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white text-xs font-mono flex items-center gap-2.5 transition-all hover:border-blue-500/50 hover:bg-zinc-800/80"
                         >
                             <Search className="w-3.5 h-3.5 text-blue-400" />
@@ -140,7 +123,7 @@ export default function PublicLayout({
                     {/* Mobile Buttons (Search + Hamburger Toggle) */}
                     <div className="flex items-center gap-2 md:hidden">
                         <button
-                            onClick={() => setCmdKOpen(true)}
+                            onClick={() => openCommandPalette()}
                             className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white focus:outline-none flex items-center justify-center"
                             aria-label="Search Portal"
                         >
@@ -259,89 +242,6 @@ export default function PublicLayout({
                     </div>
                 </div>
             </footer>
-
-            {/* Command Palette Modal */}
-            {cmdKOpen && <CommandPaletteModal onClose={() => setCmdKOpen(false)} />}
-        </div>
-    )
-}
-
-function CommandPaletteModal({ onClose }: { onClose: () => void }) {
-    const [query, setQuery] = useState('')
-
-    const items = [
-        { label: 'Track & Trace Container', href: '/track', category: 'Navigation', icon: Package },
-        { label: 'Modular Capability Matrix', href: '/features', category: 'Product', icon: Layers },
-        { label: 'Tiered Pricing & ROI Calculator', href: '/pricing', category: 'Product', icon: CreditCard },
-        { label: 'Industry Vertical Solutions', href: '/solutions', category: 'Solutions', icon: Truck },
-        { label: 'Company Mission & SLA', href: '/about', category: 'Company', icon: Globe },
-        { label: 'Enterprise Proposal Request', href: '/contact', category: 'Contact', icon: Briefcase },
-        { label: 'Customer Portal Login', href: '/login', category: 'Auth', icon: ShieldCheck },
-        { label: 'Start 14-Day Free Trial', href: '/register', category: 'Auth', icon: Zap },
-    ]
-
-    const filtered = items.filter(
-        (item) =>
-            item.label.toLowerCase().includes(query.toLowerCase()) ||
-            item.category.toLowerCase().includes(query.toLowerCase())
-    )
-
-    return (
-        <div className="fixed inset-0 z-50 bg-zinc-950/80 backdrop-blur-md flex items-start justify-center pt-16 sm:pt-24 px-4 animate-in fade-in duration-150">
-            <div className="fixed inset-0" onClick={onClose} />
-            <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-3xl shadow-2xl overflow-hidden z-10">
-                <div className="p-4 border-b border-zinc-800 flex items-center gap-3">
-                    <Search className="w-4 h-4 text-blue-400 shrink-0" />
-                    <input
-                        type="text"
-                        autoFocus
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Search page or command..."
-                        className="w-full bg-transparent text-white text-sm focus:outline-none placeholder:text-zinc-500 font-medium"
-                    />
-                    <button onClick={onClose} className="p-1 rounded-lg hover:bg-zinc-800 text-zinc-400">
-                        <X className="w-4 h-4" />
-                    </button>
-                </div>
-
-                <div className="max-h-80 overflow-y-auto p-2 space-y-1">
-                    {filtered.length > 0 ? (
-                        filtered.map((item, idx) => {
-                            const IconComp = item.icon
-                            return (
-                                <Link
-                                    key={idx}
-                                    href={item.href}
-                                    onClick={onClose}
-                                    className="flex items-center justify-between px-4 py-3 rounded-2xl hover:bg-zinc-800/80 transition-colors group"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-xl bg-zinc-800 flex items-center justify-center text-blue-400">
-                                            <IconComp className="w-4 h-4" />
-                                        </div>
-                                        <span className="text-sm font-semibold text-zinc-200 group-hover:text-white">
-                                            {item.label}
-                                        </span>
-                                    </div>
-                                    <span className="text-xs text-zinc-500 font-mono uppercase tracking-wider">
-                                        {item.category}
-                                    </span>
-                                </Link>
-                            )
-                        })
-                    ) : (
-                        <div className="py-8 text-center text-xs text-zinc-500 font-mono">
-                            No matching commands found.
-                        </div>
-                    )}
-                </div>
-
-                <div className="p-3 bg-zinc-950/80 border-t border-zinc-800 text-[11px] text-zinc-500 flex items-center justify-between font-mono">
-                    <span>Navigation Shortcut</span>
-                    <span>Tap item or ESC to exit</span>
-                </div>
-            </div>
         </div>
     )
 }
