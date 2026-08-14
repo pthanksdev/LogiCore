@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Module;
+use App\Models\Customer;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -21,7 +22,39 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // 2. Seed Platform Modules Catalog
+        // 2. Seed Ops Admin
+        User::updateOrCreate(
+            ['email' => 'admin@scm.com'],
+            [
+                'name' => 'Ops Platform Admin',
+                'password' => Hash::make('password123'),
+                'role' => 'admin',
+            ]
+        );
+
+        // 3. Seed Default Customer Tenant
+        $custUser = User::updateOrCreate(
+            ['email' => 'customer@scm.com'],
+            [
+                'name' => 'Demo Enterprise Customer',
+                'password' => Hash::make('password123'),
+                'role' => 'customer',
+                'cust_id' => '1000000001',
+                'company' => 'Acme Global Supply Chain',
+            ]
+        );
+
+        Customer::updateOrCreate(
+            ['cust_id' => '1000000001'],
+            [
+                'user_id' => $custUser->id,
+                'name' => 'Demo Enterprise Customer',
+                'email' => 'customer@scm.com',
+                'company' => 'Acme Global Supply Chain',
+            ]
+        );
+
+        // 4. Seed Platform Modules Catalog
         $modules = [
             [
                 'name' => 'Real-Time Inventory Control',
