@@ -23,6 +23,9 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
+# Set default fallback APP_KEY for Sanctum encryption security if missing
+ENV APP_KEY=base64:4VnZ5Vb5d0yZ7m9K2w8X3y1Z4a6b8c0d2e4f6g8h0i2=
+
 # Set storage permissions
 RUN chmod -R 777 storage bootstrap/cache
 
