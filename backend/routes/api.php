@@ -55,6 +55,7 @@ Route::prefix('v1')->group(function () {
 
         // Admin Routes (Admin & Supreme Admin)
         Route::middleware([EnsureRole::class . ':admin,supreme_admin'])->prefix('admin')->group(function () {
+            Route::get('/stats', [DashboardApiController::class, 'getAdminDashboardStats']);
             Route::get('/orders', [AdminOrderController::class, 'index']);
             Route::post('/orders/{id}/approve', [AdminOrderController::class, 'approve']);
             Route::post('/orders/{id}/request-decline', [AdminOrderController::class, 'requestDecline']);

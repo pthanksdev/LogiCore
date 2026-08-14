@@ -115,6 +115,27 @@ class DashboardApiController extends Controller
     // ==========================================
 
     /**
+     * Get platform admin dashboard core statistics from DB
+     */
+    public function getAdminDashboardStats()
+    {
+        $activeTenants = Customer::count();
+        $totalOrders = Order::count();
+        $approvedOrders = Order::where('status', 'approved')->count();
+        $provisionedModules = Module::count();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'active_tenants' => $activeTenants,
+                'total_orders' => $totalOrders,
+                'approved_orders' => $approvedOrders,
+                'provisioned_modules' => $provisionedModules,
+            ]
+        ]);
+    }
+
+    /**
      * Get inventory levels from DB
      */
     public function getAdminInventory()

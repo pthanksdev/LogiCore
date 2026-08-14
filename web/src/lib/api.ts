@@ -245,6 +245,9 @@ export const dashboardExtApi = {
   },
 
   // Admin Operations
+  async getAdminStats() {
+    return apiFetch('/admin/stats');
+  },
   async getAdminInventory() {
     return apiFetch('/admin/inventory');
   },
