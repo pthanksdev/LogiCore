@@ -3,7 +3,9 @@
  * Connects Next.js Frontend to PHP Laravel Backend API (http://localhost:8000/api/v1)
  */
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+const rawApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+const cleanUrl = rawApiUrl.replace(/\/+$/, '');
+export const API_BASE_URL = cleanUrl.endsWith('/api/v1') ? cleanUrl : `${cleanUrl}/api/v1`;
 
 export function getStoredToken(): string | null {
   if (typeof window === 'undefined') return null;

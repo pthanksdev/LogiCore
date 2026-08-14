@@ -29,5 +29,5 @@ RUN chmod -R 777 storage bootstrap/cache
 # Expose port (Render automatically sets $PORT)
 EXPOSE 10000
 
-# Start Laravel production server with clean fresh migration & seeding
-CMD php artisan config:cache && php artisan route:cache && php artisan migrate:fresh --seed --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
+# Start Laravel production server with optimized migration check
+CMD php artisan config:cache && php artisan route:cache && php artisan migrate --force && php artisan db:seed --force || true && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
