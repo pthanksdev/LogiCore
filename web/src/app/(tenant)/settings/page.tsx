@@ -39,11 +39,26 @@ export default function SettingsPage() {
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault()
         setSaving(true)
-        // Simulate API saving profile feedback
-        setTimeout(() => {
+        
+        try {
+            const res = await authApi.updateProfile({
+                name,
+                phone,
+                address,
+                company,
+                gst_number: gstNumber,
+            });
+
+            if (res.success) {
+                toast.success('Organization profile updated successfully!')
+            } else {
+                toast.error(res.message || 'Failed to update profile.')
+            }
+        } catch (err: any) {
+            toast.error(err.message || 'An error occurred during update.')
+        } finally {
             setSaving(false)
-            toast.success('Organization profile updated successfully!')
-        }, 600)
+        }
     }
 
     if (loading) {

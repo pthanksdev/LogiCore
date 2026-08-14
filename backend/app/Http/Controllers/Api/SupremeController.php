@@ -65,6 +65,17 @@ class SupremeController extends Controller
         } elseif ($request->action === 'force_approve') {
             $order->update(['status' => 'approved']);
 
+            \App\Models\CustomerModule::updateOrCreate(
+                [
+                    'cust_id' => $order->cust_id,
+                    'module_id' => $order->module_id,
+                ],
+                [
+                    'is_active' => true,
+                    'granted_by' => $request->user()->id,
+                ]
+            );
+
             Notification::create([
                 'cust_id' => $order->cust_id,
                 'message' => "Order #{$order->id} for {$order->module->name} was OVERRIDDEN and APPROVED by Supreme Admin.",

@@ -107,6 +107,13 @@ export const authApi = {
     return apiFetch('/auth/me');
   },
 
+  async updateProfile(data: any) {
+    return apiFetch('/auth/me', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+
   async logout() {
     const res = await apiFetch('/auth/logout', { method: 'POST' });
     removeStoredToken();

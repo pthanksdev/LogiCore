@@ -16,7 +16,7 @@ export default async function TenantLayout({
 
                 <div className="flex-1 overflow-y-auto py-4">
                     <nav className="space-y-1 px-3">
-                        <div className="px-3 mb-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Main Menu</div>
+                        <div className="px-3 mb-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Main Operations</div>
                         <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
                             Dashboard
                         </Link>
@@ -30,7 +30,21 @@ export default async function TenantLayout({
                             Notifications
                         </Link>
                         <Link href="/settings" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
-                            Settings
+                            Profile Settings
+                        </Link>
+
+                        <div className="px-3 pt-4 mb-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Services & Tools</div>
+                        <Link href="/dashboard/shipments" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+                            🚚 Cargo Shipments
+                        </Link>
+                        <Link href="/dashboard/billing" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+                            💳 Invoices & Billing
+                        </Link>
+                        <Link href="/dashboard/team" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+                            👥 Team Directory
+                        </Link>
+                        <Link href="/dashboard/integrations" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+                            🔌 API & Webhooks
                         </Link>
                     </nav>
                 </div>
